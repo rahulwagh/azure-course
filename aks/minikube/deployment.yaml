@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+  labels:
+    app: minikube-python-flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minikube-python-flask-app
+  template:
+    metadata:
+      labels:
+        app: minikube-python-flask-app
+    spec:
+      containers:
+        - name: minikube-python-flask-app
+          image: rahulwagh17/python-rest-api-flask-app:latest
+          ports:
+            - containerPort: 8888
+          env:
+            - name: port
+              value: "8888"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-deployment
+spec:
+  type: NodePort
+  ports:
+    - port: 8888
+      targetPort: 8888
+      #nodePort: 30100
+  selector:
+    app: minikube-python-flask-app

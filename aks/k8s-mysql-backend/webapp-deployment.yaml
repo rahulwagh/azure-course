@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-webapp
+  template:
+    metadata:
+      labels:
+        app: python-webapp
+    spec:
+      containers:
+        - name: python-flask-app
+          image: europenorthdemoacr.azurecr.io/apps/python-webapp
+          ports:
+            - containerPort: 8888
+          env:
+            - name: PORT
+              value: "8888"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-webapp
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8888
+      targetPort: 8888
+  selector:
+    app: python-webapp
